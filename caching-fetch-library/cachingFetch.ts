@@ -3,6 +3,8 @@
 // However, you must not change the surface API presented from this file,
 // and you should not need to change any other files in the project to complete the challenge
 
+import { useEffect, useState } from "react";
+
 type UseCachingFetch = (url: string) => {
   isLoading: boolean;
   data: unknown;
@@ -21,19 +23,55 @@ type UseCachingFetch = (url: string) => {
  *  - 3 in Name.tsx
  *
  * Acceptance Criteria:
- * 1. The application at /appWithoutSSRData should properly render, with JavaScript enabled, you should see a list of people.
+ * 1. The application at /appWithoutSSRData should properly render, with JavaScript enabled, you should see a list of people. 
  * 2. You should only see 1 network request in the browser's network tab when visiting the /appWithoutSSRData route.
  * 3. You have not changed any code outside of this file to achieve this.
  * 4. This file passes a type-check.
  *
  */
-export const useCachingFetch: UseCachingFetch = (url) => {
+
+// create a cache map
+const cache = new Map<string, unknown>();
+
+export const useCachingFetch: UseCachingFetch = (url: string) => {
+  // set up states to handle return values
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [data, setData] = useState<unknown>();
+  const [error, setError] = useState<Error | null>(null);
+
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(url);
+        const data = await response.json();
+        setData(data);
+        cache.set(url, data);
+      } catch(error) {
+        if (error instanceof Error) {
+          setError(error);
+        } else {
+          setError(new Error(String(error)));
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // check cache and return if located
+    if (cache.has(url)) {
+      setData(cache.get(url));
+      setIsLoading(false);
+    } else {
+      fetchData();
+    }
+  }, [url]);
+
   return {
-    data: null,
-    isLoading: false,
-    error: new Error(
-      'UseCachingFetch has not been implemented, please read the instructions in DevTask.md',
-    ),
+    data,
+    isLoading,
+    error
   };
 };
 
