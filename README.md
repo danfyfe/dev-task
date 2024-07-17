@@ -15,12 +15,15 @@ Below are the added configurations choices and explanations.
 `commit-hook`: I did not have time to implement this, but having a commit hook that runs the linter and formatter before committing. This can help keep teams from missing them and committing unformatted and lint failing code, which is especially problematic if the linter fails when being run in the CI/CD pipeline.
 
 ## Tests
-`Jest`: Unit and Integration testing using tools like Jest can help create more confidence when developing features and making updates. Jest is usually a great choice for testing in React.
+`Jest`: They are not implemented here, but Unit and Integration testing using tools like Jest can help create more confidence when developing features and making updates. Jest is usually a great choice for testing in React.
 
 `Cypress`: This is not implemented here, but end to end testing would also be important, though it would likely be in it's own repo.
 
 ## CI/CD
 `GitHub Actions`: I did not have time to implement this, but having GitHub actions is essential for CI/CD processes. Ideally, we would have a `.yml` with instructions on what the repos to checkout, how to build the application and run the linter, Jest and Cypress tests in the pipeline.
+
+## Styling
+`Styling/Design System`: I did not include it here, but there we would usually have a design system and setup to handle styling. I have been enjoying working with TailwindCSS, personally.
 
 # Getting Started
 
