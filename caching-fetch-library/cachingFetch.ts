@@ -92,6 +92,7 @@ export const preloadCachingFetch = async (url: string): Promise<void> => {
   try {
     const response = await fetch(url);
     const data = await response.json();
+    // set the cache on server to bypass need to fetch in useCachingFetch
     cache.set(url, data);
   } catch(error) {
    console.error(`Error in preloadCachingFetch: ${error}`);
@@ -114,8 +115,13 @@ export const preloadCachingFetch = async (url: string): Promise<void> => {
  * 4. This file passes a type-check.
  *
  */
-export const serializeCache = (): string => '';
+export const serializeCache = (): string => JSON.stringify(Array.from(cache.entries()));
 
-export const initializeCache = (serializedCache: string): void => {};
+export const initializeCache = (serializedCache: string): void => {
+  const entries = JSON.parse(serializedCache);
+  for (const [key, value] of entries) {
+    cache.set(key, value);
+  }
+};
 
-export const wipeCache = (): void => {};
+export const wipeCache = (): void => { cache.clear() };
