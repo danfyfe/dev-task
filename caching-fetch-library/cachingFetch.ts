@@ -39,7 +39,6 @@ export const useCachingFetch: UseCachingFetch = (url: string) => {
   const [data, setData] = useState<unknown>();
   const [error, setError] = useState<Error | null>(null);
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -90,9 +89,13 @@ export const useCachingFetch: UseCachingFetch = (url: string) => {
  *
  */
 export const preloadCachingFetch = async (url: string): Promise<void> => {
-  throw new Error(
-    'preloadCachingFetch has not been implemented, please read the instructions in DevTask.md',
-  );
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    cache.set(url, data);
+  } catch(error) {
+   console.error(`Error in preloadCachingFetch: ${error}`);
+  }
 };
 
 /**
